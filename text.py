@@ -3,6 +3,7 @@ class Node:
         self.char = char
         self.next = next
         self.prev = prev
+        self.index = 0
     
     def __next__(self):
         return self.next
@@ -68,8 +69,6 @@ class Text:
         self.checkLength(text)
         self.parseIndex(index)
 
-        # // check of self is empty
-
         if (index == 0):
             if (self.head == None):
                 self.head = Node(text)
@@ -130,12 +129,29 @@ class Text:
         return result
     
     def __getitem__(self, index):
-        self.checkType(index, haveToBeInt=True)
-        index = self.parseIndex(index)
-        current = self.head
-        for _ in range(index):
-            current = current.next
-        return current.char
+        if isinstance(index, int):
+            self.checkType(index, haveToBeInt=True)
+            index = self.parseIndex(index)
+            current = self.head
+            for _ in range(index):
+                current = current.next
+            return current.char
+        elif isinstance(index, slice):
+            start, stop, step = index.indices(len(self))
+            result = []
+            current = self.head
+            for i in range(start):
+                current = current.next
+            for i in range(start, stop, step):
+                if current is None:
+                    break
+                result.append(current.char)
+                for _ in range(step):
+                    if current is not None:
+                        current = current.next
+            return ''.join(result)
+        else:
+            raise TypeError("Invalid argument type.")
     
     def __setitem__(self, index, value):
         self.checkType(index, haveToBeInt=True)
@@ -159,8 +175,37 @@ class Text:
     def __contains__(self, item):
         self.checkType(item, haveToBeString=True, haveToBeText=True)
         current = self.head
-        while (current != None):
-            if (current.char == item):
-                return True
-            current = current.next
-        return False
+        if (isinstance(item, str)):
+            while (current != None):
+                if (current.char == item):
+                    return True
+                current = current.next
+            return False
+        else:
+            subStringLength = len(item)
+            i = 0
+            while (current != None):
+                if (i == subStringLength):
+                    return True
+                if (i > 0 and current.char != item[i]):
+                    i = 0
+                if (current.char == item[i]):
+                    i += 1
+                current = current.next
+            return False
+    
+    def __iter__(self):
+        self.index = 0
+        return self
+
+    def __next__(self):
+        if self.index < len(self):
+            result = self[self.index]
+            self.index += 1
+            return result
+        else:
+            raise StopIteration
+
+    
+
+                
