@@ -13,11 +13,11 @@ class TestText(unittest.TestCase):
         self.assertEqual(self.text[-1], '!')
 
     def test_getitem_slice(self):
-        self.assertEqual(self.text[0:5], 'Hello')
-        self.assertEqual(self.text[7:12], 'World')
-        self.assertEqual(self.text[:5], 'Hello')
-        self.assertEqual(self.text[7:], 'World!')
-        self.assertEqual(self.text[::2], 'Hlo ol!')
+        self.assertEqual(print(self.text[0:5]), print(Text("Hello")))
+        self.assertEqual(print(self.text[7:12]), print(Text("World")))
+        self.assertEqual(print(self.text[:5]), print(Text("Hello")))
+        self.assertEqual(print(self.text[7:]), print(Text("World!")))
+        self.assertEqual(print(self.text[::2]), print(Text("Hlo ol!")))
 
     def test_add(self):
         new_text = self.text + " How are you?"
@@ -47,5 +47,8 @@ class TestText(unittest.TestCase):
         self.text2.insert(0, '!')
         self.assertEqual(str(self.text2), "!")
 
+    def test_copy(self):
+        new_text = self.text.copy()
+        self.assertEqual(str(new_text), "Hello, World!")
 if __name__ == '__main__':
     unittest.main()

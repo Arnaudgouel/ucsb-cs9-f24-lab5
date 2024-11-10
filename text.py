@@ -60,7 +60,10 @@ class Text:
         self.tailPrt = None
 
     def copy(self):
-        return Text(self)
+        newText = Text()
+        for char in self:
+            newText.append(char)
+        return newText
     
     def extend(self, text):
         self.checkType(text, haveToBeString=True, haveToBeText=True)
