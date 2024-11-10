@@ -11,8 +11,8 @@ class Node:
 class Text:
     def __init__(self, text = ""):
         self.checkType(text, haveToBeText=True, haveToBeString=True)
-        self.head = None
-        self.tail = None
+        self.headPrt = None
+        self.tailPrt = None
         for char in text:
             self.append(char)
 
@@ -45,15 +45,15 @@ class Text:
         self.checkType(text, haveToBeString=True)
         self.checkLength(text)
         if (self.head == None):
-            self.head = Node(text)
-            self.tail = self.head
+            self.headPrt = Node(text)
+            self.tailPrt = self.head
         else:
             self.tail.next = Node(text, None, self.tail)
-            self.tail = self.tail.next
+            self.tailPrt = self.tail.next
 
     def clear(self):
-        self.head = None
-        self.tail = None
+        self.headPrt = None
+        self.tailPrt = None
 
     def copy(self):
         return Text(self.text)
@@ -71,10 +71,10 @@ class Text:
 
         if (index == 0):
             if (self.head == None):
-                self.head = Node(text)
-                self.tail = self.head
+                self.headPrt = Node(text)
+                self.tailPrt = self.head
             newHead = Node(text, self.head, None)
-            self.head = newHead
+            self.headPrt = newHead
             self.head.next.prev = self.head
         else:
             current = self.head
@@ -83,17 +83,17 @@ class Text:
             current.next = Node(text, current.next, current)
             current.next.next.prev = current.next
             if (current.next.next == None):
-                self.tail = current.next
+                self.tailPrt = current.next
 
     def pop(self, index = -1):
         self.checkType(index, haveToBeInt=True)
         self.parseIndex(index)
         if (index == 0):
             result = self.head.char
-            self.head = self.head.next
+            self.headPrt = self.head.next
             self.head.prev = None
             if (self.head == None):
-                self.tail = None
+                self.tailPrt = None
             return result
         else:
             current = self.head
@@ -103,14 +103,14 @@ class Text:
             current.next = current.next.next
             current.next.next.prev = current.next
             if (current.next == None):
-                self.tail = current
+                self.tailPrt = current
             return result
     
     def head(self):
-        return self.head
+        return self.headPrt
     
     def tail(self):
-        return self.tail
+        return self.tailPrt
     
     def __len__(self):
         current = self.head
