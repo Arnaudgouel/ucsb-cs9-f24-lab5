@@ -154,7 +154,7 @@ class Text:
                 for _ in range(step):
                     if current is not None:
                         current = current.next
-            return ''.join(result)
+            return Text("".join(result))
         else:
             raise TypeError("Invalid argument type.")
     
