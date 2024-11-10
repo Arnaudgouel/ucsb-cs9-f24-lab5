@@ -36,20 +36,22 @@ class Text:
         
     def parseIndex(self, index):
         if (index < 0):
-            index = len(self.text) + index
-        if (index < 0 or index >= len(self.text)):
+            index = len(self) + index
+        if (index < 0 or index >= len(self)):
             raise IndexError()
         return index
 
     def append(self, text):
         self.checkType(text, haveToBeString=True)
         self.checkLength(text)
-        if (self.head == None):
-            self.headPrt = Node(text)
-            self.tailPrt = self.head
+        newNode = Node(text)
+        if (self.headPrt is None):
+            self.headPrt = newNode
+            self.tailPrt = newNode
         else:
-            self.tail.next = Node(text, None, self.tail)
-            self.tailPrt = self.tail.next
+            self.tailPrt.next = newNode
+            newNode.prev = self.tailPrt
+            self.tailPrt = newNode
 
     def clear(self):
         self.headPrt = None
@@ -70,14 +72,14 @@ class Text:
         self.parseIndex(index)
 
         if (index == 0):
-            if (self.head == None):
+            if (self.headPrt is None):
                 self.headPrt = Node(text)
-                self.tailPrt = self.head
-            newHead = Node(text, self.head, None)
+                self.tailPrt = self.headPrt
+            newHead = Node(text, self.headPrt, None)
             self.headPrt = newHead
-            self.head.next.prev = self.head
+            self.headPrt.next.prev = self.headPrt
         else:
-            current = self.head
+            current = self.headPrt
             for _ in range(index - 1):
                 current = current.next
             current.next = Node(text, current.next, current)
@@ -89,14 +91,14 @@ class Text:
         self.checkType(index, haveToBeInt=True)
         self.parseIndex(index)
         if (index == 0):
-            result = self.head.char
-            self.headPrt = self.head.next
-            self.head.prev = None
-            if (self.head == None):
+            result = self.headPrt.char
+            self.headPrt = self.headPrt.next
+            self.headPrt.prev = None
+            if (self.headPrt is None):
                 self.tailPrt = None
             return result
         else:
-            current = self.head
+            current = self.headPrt
             for _ in range(index - 1):
                 current = current.next
             result = current.next.char
@@ -113,7 +115,7 @@ class Text:
         return self.tailPrt
     
     def __len__(self):
-        current = self.head
+        current = self.headPrt
         length = 0
         while (current != None):
             length += 1
@@ -121,7 +123,7 @@ class Text:
         return length
     
     def __str__(self):
-        current = self.head
+        current = self.headPrt
         result = ""
         while (current != None):
             result += current.char
@@ -132,14 +134,14 @@ class Text:
         if isinstance(index, int):
             self.checkType(index, haveToBeInt=True)
             index = self.parseIndex(index)
-            current = self.head
+            current = self.headPrt
             for _ in range(index):
                 current = current.next
             return current.char
         elif isinstance(index, slice):
             start, stop, step = index.indices(len(self))
             result = []
-            current = self.head
+            current = self.headPrt
             for i in range(start):
                 current = current.next
             for i in range(start, stop, step):
@@ -158,7 +160,7 @@ class Text:
         self.checkType(value, haveToBeString=True)
         self.checkLength(value)
         index = self.parseIndex(index)
-        current = self.head
+        current = self.headPrt
         for _ in range(index):
             current = current.next
         current.char = value
@@ -174,37 +176,34 @@ class Text:
     
     def __contains__(self, item):
         self.checkType(item, haveToBeString=True, haveToBeText=True)
-        current = self.head
-        if (isinstance(item, str)):
-            while (current != None):
-                if (current.char == item):
+        current = self.headPrt
+        if isinstance(item, str) or isinstance(item, Text):
+            item_length = len(item)
+            while current is not None:
+                runner = current
+                match = True
+                for char in item:
+                    if runner is None or runner.char != char:
+                        match = False
+                        break
+                    runner = runner.next
+                if match:
                     return True
                 current = current.next
             return False
         else:
-            subStringLength = len(item)
-            i = 0
-            while (current != None):
-                if (i == subStringLength):
-                    return True
-                if (i > 0 and current.char != item[i]):
-                    i = 0
-                if (current.char == item[i]):
-                    i += 1
-                current = current.next
-            return False
+            raise TypeError("Invalid argument type.")
     
     def __iter__(self):
-        self.index = 0
+        self.current = self.headPrt
         return self
 
     def __next__(self):
-        if self.index < len(self):
-            result = self[self.index]
-            self.index += 1
-            return result
-        else:
+        if self.current is None:
             raise StopIteration
+        char = self.current.char
+        self.current = self.current.next
+        return char
 
     
 
