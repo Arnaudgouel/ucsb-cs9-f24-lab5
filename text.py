@@ -39,7 +39,7 @@ class Text:
             newIndex = len(self) + index
         else:
             newIndex = index
-        if (newIndex < 0 or newIndex >= len(self)):
+        if (newIndex < 0 or (newIndex >= len(self) and len(self) != 0)):
             raise IndexError(newIndex, len(self))
         return newIndex
 
@@ -77,9 +77,10 @@ class Text:
             if (self.headPrt is None):
                 self.headPrt = Node(text)
                 self.tailPrt = self.headPrt
-            newHead = Node(text, self.headPrt, None)
-            self.headPrt = newHead
-            self.headPrt.next.prev = self.headPrt
+            else:
+                newHead = Node(text, self.headPrt, None)
+                self.headPrt = newHead
+                self.headPrt.next.prev = self.headPrt
         else:
             current = self.headPrt
             for _ in range(index - 1):

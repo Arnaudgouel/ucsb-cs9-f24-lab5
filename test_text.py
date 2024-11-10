@@ -5,6 +5,7 @@ class TestText(unittest.TestCase):
 
     def setUp(self):
         self.text = Text("Hello, World!")
+        self.text2 = Text()
 
     def test_getitem_index(self):
         self.assertEqual(self.text[0], 'H')
@@ -43,6 +44,8 @@ class TestText(unittest.TestCase):
         # assert a index error is raised
         with self.assertRaises(IndexError):
             self.text.insert(700, '!')
+        self.text2.insert(0, '!')
+        self.assertEqual(str(self.text2), "!")
 
 if __name__ == '__main__':
     unittest.main()
