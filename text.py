@@ -36,10 +36,12 @@ class Text:
         
     def parseIndex(self, index):
         if (index < 0):
-            index = len(self) + index
-        if (index < 0 or index >= len(self)):
-            raise IndexError()
-        return index
+            newIndex = len(self) + index
+        else:
+            newIndex = index
+        if (newIndex < 0 or newIndex >= len(self)):
+            raise IndexError(newIndex, len(self))
+        return newIndex
 
     def append(self, text):
         self.checkType(text, haveToBeString=True)
@@ -69,7 +71,7 @@ class Text:
         self.checkType(text, haveToBeString=True)
         self.checkType(index, haveToBeInt=True)
         self.checkLength(text)
-        self.parseIndex(index)
+        index = self.parseIndex(index)
 
         if (index == 0):
             if (self.headPrt is None):
@@ -89,7 +91,7 @@ class Text:
 
     def pop(self, index = -1):
         self.checkType(index, haveToBeInt=True)
-        self.parseIndex(index)
+        index = self.parseIndex(index)
         if (index == 0):
             result = self.headPrt.char
             self.headPrt = self.headPrt.next

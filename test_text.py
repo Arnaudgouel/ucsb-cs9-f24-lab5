@@ -35,5 +35,14 @@ class TestText(unittest.TestCase):
         chars = [char for char in self.text]
         self.assertEqual(chars, list("Hello, World!"))
 
+    def test_insert(self):
+        self.text.insert(0, '!')
+        self.assertEqual(str(self.text), "!Hello, World!")
+        self.text.insert(-1, '!')
+        self.assertEqual(str(self.text), "!Hello, World!!")
+        # assert a index error is raised
+        with self.assertRaises(IndexError):
+            self.text.insert(700, '!')
+
 if __name__ == '__main__':
     unittest.main()
