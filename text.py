@@ -31,7 +31,7 @@ class Text:
                 raise TypeError()
     
     def checkLength(self, text, maxLength = 1):
-        if (len(text) > maxLength):
+        if (len(text) != maxLength):
             raise ValueError()
         
     def parseIndex(self, index):
@@ -58,7 +58,7 @@ class Text:
         self.tailPrt = None
 
     def copy(self):
-        return Text(self.text)
+        return Text(self)
     
     def extend(self, text):
         self.checkType(text, haveToBeString=True, haveToBeText=True)
