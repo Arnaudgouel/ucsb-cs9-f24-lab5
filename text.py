@@ -34,13 +34,15 @@ class Text:
         if (len(text) != maxLength):
             raise ValueError()
         
-    def parseIndex(self, index):
+    def parseIndex(self, index , toInsert = False):
         if (index < 0):
             newIndex = len(self) + index
         else:
             newIndex = index
-        if (newIndex < 0 or (newIndex >= len(self) and len(self) != 0)):
+        if (not toInsert and (newIndex < 0 or (newIndex >= len(self) and len(self) != 0))):
             raise IndexError(newIndex, len(self))
+        elif (toInsert and newIndex < 0 or newIndex > len(self)):
+            raise IndexError(newIndex, len(self), "test")
         return newIndex
 
     def append(self, text):
@@ -74,7 +76,7 @@ class Text:
         self.checkType(text, haveToBeString=True)
         self.checkType(index, haveToBeInt=True)
         self.checkLength(text)
-        index = self.parseIndex(index)
+        index = self.parseIndex(index, True)
 
         if (index == 0):
             if (self.headPrt is None):
@@ -89,9 +91,11 @@ class Text:
             for _ in range(index - 1):
                 current = current.next
             current.next = Node(text, current.next, current)
-            current.next.next.prev = current.next
             if (current.next.next == None):
                 self.tailPrt = current.next
+            else:
+                current.next.next.prev = current.next
+
 
     def pop(self, index = -1):
         self.checkType(index, haveToBeInt=True)

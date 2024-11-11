@@ -46,6 +46,8 @@ class TestText(unittest.TestCase):
             self.text.insert(700, '!')
         self.text2.insert(0, '!')
         self.assertEqual(str(self.text2), "!")
+        self.text2.insert(1, '!')
+        self.assertEqual(str(self.text2), "!!")
 
     def test_copy(self):
         new_text = self.text.copy()
