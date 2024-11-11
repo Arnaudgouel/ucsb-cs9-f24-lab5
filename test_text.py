@@ -49,6 +49,19 @@ class TestText(unittest.TestCase):
         self.text2.insert(1, '!')
         self.assertEqual(str(self.text2), "!!")
 
+    def test_pop(self):
+        print(self.text)
+        self.assertEqual(self.text.pop(), '!')
+        self.assertEqual(str(self.text), "Hello, World")
+        self.assertEqual(self.text.pop(0), 'H')
+        self.assertEqual(str(self.text), "ello, World")
+        self.assertEqual(self.text.pop(-1), 'd')
+        self.assertEqual(str(self.text), "ello, Worl")
+        # assert a index error is raised
+        with self.assertRaises(IndexError):
+            self.text.pop(700)
+            self.text2.pop()
+
     def test_copy(self):
         new_text = self.text.copy()
         self.assertEqual(str(new_text), "Hello, World!")

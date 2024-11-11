@@ -113,9 +113,11 @@ class Text:
                 current = current.next
             result = current.next.char
             current.next = current.next.next
-            current.next.next.prev = current.next
             if (current.next == None):
                 self.tailPrt = current
+            else:
+                if (current.next.next != None):
+                    current.next.next.prev = current.next
             return result
     
     def head(self):
