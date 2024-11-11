@@ -103,9 +103,10 @@ class Text:
         if (index == 0):
             result = self.headPrt.char
             self.headPrt = self.headPrt.next
-            self.headPrt.prev = None
             if (self.headPrt is None):
                 self.tailPrt = None
+            else:
+                self.headPrt.prev = None
             return result
         else:
             current = self.headPrt
