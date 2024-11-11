@@ -143,30 +143,30 @@ class Text:
             current = current.next
         return result
     
-    def __getitem__(self, index):
-        if isinstance(index, int):
-            self.checkType(index, haveToBeInt=True)
-            index = self.parseIndex(index)
+    def _get_node_at_index(self, index):
+        index = self.parseIndex(index)
+        
+        if index <= len(self) // 2:
             current = self.headPrt
             for _ in range(index):
                 current = current.next
-            return current.char
-        elif isinstance(index, slice):
-            start, stop, step = index.indices(len(self))
-            result = []
-            current = self.headPrt
-            for i in range(start):
-                current = current.next
-            for i in range(start, stop, step):
-                if current is None:
-                    break
-                result.append(current.char)
-                for _ in range(step):
-                    if current is not None:
-                        current = current.next
-            return Text("".join(result))
         else:
-            raise TypeError("Invalid argument type.")
+            current = self.tailPrt
+            for _ in range(len(self) - 1 - index):
+                current = current.prev
+                
+        return current
+    
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            start, stop, step = index.indices(len(self))
+            result = Text()
+            indices = range(start, stop, step)
+            for i in indices:
+                result.append(self._get_node_at_index(i).char)
+            return result
+        else:
+            return self._get_node_at_index(index).char
     
     def __setitem__(self, index, value):
         self.checkType(index, haveToBeInt=True)

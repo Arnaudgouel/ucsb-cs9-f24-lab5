@@ -6,6 +6,7 @@ class TestText(unittest.TestCase):
     def setUp(self):
         self.text = Text("Hello, World!")
         self.text2 = Text("t")
+        self.text3 = Text("Lilliput")
 
     def test_getitem_index(self):
         self.assertEqual(self.text[0], 'H')
@@ -67,5 +68,10 @@ class TestText(unittest.TestCase):
     def test_copy(self):
         new_text = self.text.copy()
         self.assertEqual(str(new_text), "Hello, World!")
+
+    def test_slice(self):
+        print(self.text3)
+        new_text = self.text3[5:1:-1]
+        self.assertEqual(str(new_text), "pill")
 if __name__ == '__main__':
     unittest.main()
