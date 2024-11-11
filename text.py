@@ -100,26 +100,31 @@ class Text:
     def pop(self, index = -1):
         self.checkType(index, haveToBeInt=True)
         index = self.parseIndex(index)
-        if (index == 0):
-            result = self.headPrt.char
+        if len(self) == 0:
+            raise IndexError("Cannot pop from empty text")
+            
+        
+        if index == 0:
+            char = self.headPrt.char
             self.headPrt = self.headPrt.next
-            if (self.headPrt is None):
-                self.tailPrt = None
-            else:
+            if self.headPrt:
                 self.headPrt.prev = None
-            return result
-        else:
-            current = self.headPrt
-            for _ in range(index - 1):
-                current = current.next
-            result = current.next.char
-            current.next = current.next.next
-            if (current.next == None):
-                self.tailPrt = current
             else:
-                if (current.next.next != None):
-                    current.next.next.prev = current.next
-            return result
+                self.tailPrt = None
+        elif index == len(self) - 1:
+            char = self.tailPrt.char
+            self.tailPrt = self.tailPrt.prev
+            if self.tailPrt:
+                self.tailPrt.next = None
+            else:
+                self.headPrt = None
+        else:
+            node = self._get_node_at_index(index)
+            char = node.char
+            node.prev.next = node.next
+            node.next.prev = node.prev
+        
+        return char
     
     def head(self):
         return self.headPrt
